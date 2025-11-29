@@ -1,0 +1,164 @@
+Assignment2/
+│
+├── Program.cs                ← Menu to choose Problem 1 or Problem 2
+├── FreelanceTracker.cs       ← Problem 1 solution
+└── ExpenseTracker.cs         ← Problem 2 solution
+using System;
+
+namespace Assignment2
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("===== CMPS 378 - Assignment 2 =====");
+            Console.WriteLine("1. Freelance Project Income Tracker");
+            Console.WriteLine("2. Monthly Expense Tracker");
+            Console.Write("Choose a program (1 or 2): ");
+
+            string choice = Console.ReadLine();
+
+            if (choice == "1")
+            {
+                FreelanceTracker.Run();
+            }
+            else if (choice == "2")
+            {
+                ExpenseTracker.Run();
+            }
+            else
+            {
+                Console.WriteLine("Invalid choice. Exiting program.");
+            }
+        }
+    }
+}
+
+using System;
+
+namespace Assignment2
+{
+    public class FreelanceTracker
+    {
+        public static void Run()
+        {
+            Console.WriteLine("****** Welcome to Freelance Project Income Tracker ******");
+
+            // Ask for name
+            Console.Write("Enter your name: ");
+            string name = Console.ReadLine();
+
+            // Number of projects
+            Console.Write("How many projects would you like to enter? ");
+            int projectCount = int.Parse(Console.ReadLine());
+
+            double totalIncome = 0;
+            double highestIncome = 0;
+            string highestIncomeProject = "";
+
+            // Loop through projects
+            for (int i = 1; i <= projectCount; i++)
+            {
+                Console.WriteLine($"\nProject #{i}:");
+
+                Console.Write("Enter project name: ");
+                string projectName = Console.ReadLine();
+
+                Console.Write("Enter hours worked: ");
+                double hours = double.Parse(Console.ReadLine());
+
+                Console.Write("Enter hourly rate: ");
+                double rate = double.Parse(Console.ReadLine());
+
+                double projectIncome = hours * rate;
+                totalIncome += projectIncome;
+
+                // Track highest income
+                if (projectIncome > highestIncome)
+                {
+                    highestIncome = projectIncome;
+                    highestIncomeProject = projectName;
+                }
+            }
+
+            // Summary
+            double avgIncome = totalIncome / projectCount;
+
+            Console.WriteLine("\n========== FREELANCE INCOME SUMMARY ==========");
+            Console.WriteLine($"Freelancer Name:         {name}");
+            Console.WriteLine($"Projects Logged:         {projectCount}");
+            Console.WriteLine();
+            Console.WriteLine($"Total Income:            ${totalIncome:F2}");
+            Console.WriteLine($"Average Project Income:  ${avgIncome:F2}");
+            Console.WriteLine($"Highest-Earning Project: {highestIncomeProject} (${highestIncome:F2})");
+            Console.WriteLine("==============================================");
+            Console.WriteLine("Thank you for using the Income Tracker!");
+        }
+    }
+}
+
+using System;
+using System.Collections.Generic;
+
+namespace Assignment2
+{
+    public class ExpenseTracker
+    {
+        public static void Run()
+        {
+            Console.WriteLine("****** Welcome to Monthly Expense Tracker ******");
+
+            Console.Write("Enter your name: ");
+            string name = Console.ReadLine();
+
+            double totalAmount = 0;
+            int count = 0;
+
+            string highestCategory = "";
+            double highestCategoryTotal = 0;
+
+            Dictionary<string, double> categoryTotals = new Dictionary<string, double>();
+
+            while (true)
+            {
+                Console.Write("\nEnter expense category (or type 'done' to stop): ");
+                string category = Console.ReadLine();
+
+                if (category.ToLower() == "done")
+                    break;
+
+                Console.Write("Enter amount (-1 to quit): ");
+                double amount = double.Parse(Console.ReadLine());
+
+                if (amount == -1)
+                    break;
+
+                totalAmount += amount;
+                count++;
+
+                // Track per-category totals
+                if (!categoryTotals.ContainsKey(category))
+                    categoryTotals[category] = 0;
+
+                categoryTotals[category] += amount;
+
+                if (categoryTotals[category] > highestCategoryTotal)
+                {
+                    highestCategoryTotal = categoryTotals[category];
+                    highestCategory = category;
+                }
+            }
+
+            double avgExpense = (count > 0) ? totalAmount / count : 0;
+
+            Console.WriteLine("\n========== MONTHLY EXPENSE SUMMARY ==========");
+            Console.WriteLine($"Name:                    {name}");
+            Console.WriteLine($"Total Entries:           {count}");
+            Console.WriteLine($"Total Amount Spent:      ${totalAmount:F2}");
+            Console.WriteLine($"Average Expense:         ${avgExpense:F2}");
+            Console.WriteLine($"Highest Spending Category: {highestCategory}");
+            Console.WriteLine("============================================");
+            Console.WriteLine("Thank you for using the Monthly Expense Tracker!");
+        }
+    }
+}
